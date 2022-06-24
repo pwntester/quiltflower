@@ -34,8 +34,12 @@ public final class DirectoryResultSaver implements IResultSaver {
 
   @Override
   public void saveDirEntry(String path, String archiveName, String entryName) {
-    Path entryPath = this.root.resolve(entryName);
     try {
+      Path entryPath = this.root.resolve(entryName);
+      // remove file if it exists
+      if (entryPath.toFile().exists() && entryPath.toFile().isFile()) {
+        Files.delete(entryPath);
+      }
       Files.createDirectories(entryPath);
     } catch (IOException e) {
       throw new RuntimeException("Failed to save directory", e);
